@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const BabiliPlugin = require('babili-webpack-plugin')
+const webpack = require('webpack')
 
 const PATHS = {
     app: path.join(__dirname, 'app'),
@@ -23,13 +24,15 @@ module.exports = {
             warnings: true
         }
     },
+    // devtool:'source-map',
     performance:{
         hints:'warning', // 'error'
-        maxEntrypointSize:100000, // bytes
+        maxEntrypointSize:500000, // bytes
         maxAssetSize:450000, // bytes
     },
     entry: {
-        app: PATHS.app
+        app: PATHS.app,
+        vendor:['react']
     },
     output: {
         path: PATHS.build,
@@ -65,6 +68,9 @@ module.exports = {
             title: 'Webpack demo'
         }),
         plugin,
-        new BabiliPlugin()
+        new BabiliPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name:'vendor'
+        })
     ]
 }
